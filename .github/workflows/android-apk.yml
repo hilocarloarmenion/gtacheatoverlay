@@ -1,0 +1,53 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'rust/**'
+      - 'data/**'
+      - '*.gradle'
+      - 'gradle.properties'
+      - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK and NDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "ndk;27.2.12479018"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --locked
+      - name: Test Rust catalog core
+        run: cargo test --manifest-path rust/Cargo.toml
+      - name: Compile Rust for Android
+        env:
+          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
+        run: |
+          cargo ndk -t arm64-v8a -t armeabi-v7a -o app/src/main/jniLibs build --manifest-path rust/Cargo.toml --release
+          test -s app/src/main/jniLibs/arm64-v8a/libgtacheatcore.so
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build signed debug APK
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA-Cheat-Overlay-v0.1.0-installable-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
