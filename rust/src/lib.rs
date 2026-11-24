@@ -32,7 +32,7 @@ pub extern "system" fn Java_com_hilocarloarmenion_gtacheatoverlay_NativeCatalog_
         Ok(value) => value.into(),
         Err(_) => return 0,
     };
-    if !(7..=12).contains(&input.len()) || !input.bytes().all(|b| b.is_ascii_uppercase()) {
+    if !(6..=12).contains(&input.len()) || !input.bytes().all(|b| b.is_ascii_uppercase()) {
         return 0;
     }
     let needle = format!("\"code\": \"{}\"", input);
