@@ -22,7 +22,6 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        ShizukuBridge.initialize(this);
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER_VERTICAL);
@@ -37,8 +36,13 @@ public class MainActivity extends Activity {
                 Uri.parse("package:" + getPackageName()));
             startActivity(i);
         });
-        button(root, "2. Authorize Shizuku for auto input", () -> ShizukuBridge.requestPermission(this));
-        button(root, "3. Show floating circle", () -> {
+        button(root, "2. Enable built-in GTA keyboard", () -> startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)));
+        button(root, "3. Select built-in GTA keyboard", () -> {
+            android.view.inputmethod.InputMethodManager input =
+                (android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            input.showInputMethodPicker();
+        });
+        button(root, "4. Show floating circle", () -> {
             if (!Settings.canDrawOverlays(this)) {
                 Toast.makeText(this, "Enable overlay permission first", Toast.LENGTH_LONG).show();
                 return;
@@ -57,8 +61,7 @@ public class MainActivity extends Activity {
             }
         });
         button(root, "Stop overlay", () -> stopService(new Intent(this, OverlayService.class)));
-        label(root, "For one-tap codes: install and start Shizuku (Wireless debugging on Android 11+), then authorize this app. Tap a cheat to send keyboard events; hold it to copy. Key events being sent does not guarantee GTA accepted the code.", 13, false, 0xFFFFC879);
-        button(root, "Shizuku setup guide", () -> startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://shizuku.rikka.app/guide/setup/"))));
+        label(root, "This APK includes its OWN keyboard. Enable and select 'GTA Cheat Keyboard' in Android settings, then open GTA SA and use the floating menu. Tier 3 taps attempt to send keyboard presses; hold to copy. GTA must accept keyboard input for activation.", 13, false, 0xFFFFC879);
         setContentView(root);
     }
     private TextView label(LinearLayout root, String text, int sp, boolean bold, int color) {
@@ -79,6 +82,6 @@ public class MainActivity extends Activity {
         super.onResume();
         if(status!=null) status.setText("Overlay permission: "
             + (Settings.canDrawOverlays(this)?"Granted ✓":"Not granted")
-            + "\nInput backend: " + ShizukuBridge.status(this));
+            + "\nInput backend: " + GtaKeyboardService.connectionStatus());
     }
 }
