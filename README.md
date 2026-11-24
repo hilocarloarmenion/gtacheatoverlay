@@ -14,25 +14,25 @@ An Android floating overlay designed for **original GTA San Andreas Android v2.1
 - Native Rust catalog is compiled for arm64-v8a and armeabi-v7a, loaded through JNI
 - Start/stop controls and special-use foreground service notification
 
-**Important: This version does not inject key presses into GTA SA, and tapping a cheat is not one-tap activation.** The Android overlay cannot deliver arbitrary hardware keyboard events to another game. You must still enter the code via a compatible keyboard method that GTA accepts. Do not mistake copied for activated.
+**v0.2.0 experimental integrated keyboard:** The APK registers its own Android InputMethodService. Enable/select **GTA Cheat Keyboard** under Android keyboard settings, then tap a Tier 3 cheat to attempt to send its individual key-down/up events through the game's InputConnection. Long-press copies the code. **No Shizuku, root or external keyboard app required.** Android does NOT guarantee a non-text game provides an InputConnection, so automatic activation is **not yet verified on the user's GTA SA 2.10 device**; failed dispatch reports an explicit error. Even successfully sent key events don't prove GTA enabled the cheat.
 
 ## APK build
 
 Source and GitHub Actions build workflow: [.github/workflows/android-apk.yml](.github/workflows/android-apk.yml).
 
-The Actions workflow builds Rust using Android NDK, builds the Android app using Gradle, and uploads **GTA-Cheat-Overlay-v0.1.0-installable-debug** as a workflow artifact containing `app-debug.apk` (signed by Android's standard debug key, so installable on Android).
+The Actions workflow builds Rust using Android NDK, builds the Android app using Gradle, and uploads **GTA-Cheat-Overlay-v0.2.0-builtin-keyboard-debug** as a workflow artifact containing `app-debug.apk` (signed by Android's standard debug key, so installable on Android).
 
 **Verified successful CI build:** [Build Android APK run #45327264703](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45327264703) completed successfully with Rust tests, arm64/armv7 native compilation, Gradle debug APK assembly, and artifact upload all green. Download artifact **GTA-Cheat-Overlay-v0.1.0-installable-debug** from the run. It contains `app-debug.apk`. The APK has not yet been tested on a physical device.
 
 ## Controls
 
-1. Install the APK once there is a successful build.
-2. Launch the app and allow **Display over other apps**.
-3. Tap **Show floating circle**, then open GTA SA.
-4. Drag the circle anywhere. Tap to browse Tier 1 → 2 → 3.
-5. Tap a code to copy it; use a game-compatible virtual keyboard to type it into GTA.
+1. Install the v0.2.0 APK after a successful build.
+2. Grant **Display over other apps**.
+3. Enable and select **GTA Cheat Keyboard** in the Android keyboard settings. This is a keyboard service **inside this APK**, not an external dependency. Switch back to your normal keyboard after gaming.
+4. Start floating circle and switch to GTA SA.
+5. Tap Tier 1 → Tier 2 → Tier 3. Tap a code to attempt its actual key presses, or hold to copy it. The game must supply a keyboard connection; the UI shows an error if it can't.
 
-The app does not ask for root, Accessibility, screen-reading permissions, or modification of GTA SA files.
+The app does not ask for root, Accessibility, screen-reading permissions, Shizuku or modification of GTA SA files. As with every Android keyboard, enabling this keyboard gives it the ability to see text in apps when selected; it is intended for GTA only, and the code contains no network permissions.
 
 ## Catalog
 
@@ -59,3 +59,9 @@ The debug APK is then under `app/build/outputs/apk/debug/app-debug.apk`.
 https://gtadb.io/gta-san-andreas/cheats/mobile
 
 Unofficial fan app; not affiliated with Rockstar Games.
+
+## What is and is not tested
+
+- Android native Rust + overlay APK **v0.1.0** built on GitHub Actions previously.
+- **v0.2.0 integrated keyboard** source changes are now in the repository. A successful v0.2.0 build and live GTA SA activation test must be checked separately.
+- Android's InputConnection API supports software keyboards sending key-down and key-up events to the attached app; this is not system-wide privileged injection and cannot work if GTA does not expose a suitable input connection.
