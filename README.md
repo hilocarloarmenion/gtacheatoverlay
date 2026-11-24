@@ -63,5 +63,11 @@ Unofficial fan app; not affiliated with Rockstar Games.
 ## What is and is not tested
 
 - Android native Rust + overlay APK **v0.1.0** built on GitHub Actions previously.
-- **v0.2.0 integrated keyboard** source changes are now in the repository. A successful v0.2.0 build and live GTA SA activation test must be checked separately.
+- **v0.2.0 integrated keyboard** successfully built in [GitHub Actions run 45329379207](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45329379207). The artifact contains app-debug.apk. Live GTA SA activation has not yet been tested on the user's device.
 - Android's InputConnection API supports software keyboards sending key-down and key-up events to the attached app; this is not system-wide privileged injection and cannot work if GTA does not expose a suitable input connection.
+
+## Current tested build
+
+- [Successful v0.2.0 APK build](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45329379207) — Android SDK, Rust tests, Android native library compilation, Gradle assembly and artifact upload all passed.
+- The APK includes its own Android input method, with arm64-v8a and armeabi-v7a Rust libraries.
+- No Shizuku dependency. GTA SA accepting automatic input still needs device testing.
