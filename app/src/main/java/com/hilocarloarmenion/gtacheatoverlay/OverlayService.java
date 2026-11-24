@@ -37,7 +37,6 @@ public class OverlayService extends Service {
     @Override public IBinder onBind(Intent intent) {return null;}
     @Override public void onCreate() {
         super.onCreate();
-        ShizukuBridge.initialize(this);
         NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         nm.createNotificationChannel(new NotificationChannel("overlay", "GTA Overlay", NotificationManager.IMPORTANCE_LOW));
         Notification notification=new Notification.Builder(this,"overlay")
@@ -167,6 +166,7 @@ public class OverlayService extends Service {
                         ()->{selectedSubcategory=index;tier=3;showPanel();},false);
                 }
             } else {
+                addRow(rows,"Open built-in keyboard","⌨", ()->{hidePanel();GtaKeyboardService.requestKeyboard();},false);
                 JSONArray cheats=categories.getJSONObject(selectedCategory).getJSONArray("subcategories")
                     .getJSONObject(selectedSubcategory).getJSONArray("cheats");
                 for(int i=0;i<cheats.length();i++) {
@@ -179,7 +179,7 @@ public class OverlayService extends Service {
                 }
             }
         }catch(Exception e) {rows.addView(text("Error reading categories",14,WHITE,false));}
-        TextView footer=text(tier==3?"Tap = send keys • Hold = copy • "+ShizukuBridge.status(this)
+        TextView footer=text(tier==3?"Tap = type keys • Hold = copy • "+GtaKeyboardService.connectionStatus()
             :"GTA SA original Android v2.10",11,MUTED,false);
         footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(8),0,0);
         root.addView(footer);
@@ -220,15 +220,8 @@ public class OverlayService extends Service {
             }
         }
         pendingWarnCode=null;
-        if(!ShizukuBridge.status(this).equals("Automatic input ready")) {
-            Toast.makeText(this,"Shizuku not ready. Open GTA Cheat Overlay to authorize it. Hold a cheat to copy.",Toast.LENGTH_LONG).show();
-            return;
-        }
-        hidePanel();
-        ShizukuBridge.send(this,code,message-> {
-            if(message.startsWith("SENT:"))
-                Toast.makeText(this,"Keys sent to game: "+code,Toast.LENGTH_SHORT).show();
-            else Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+        GtaKeyboardService.sendCode(code, this::hidePanel, message -> {
+            Toast.makeText(this,message,Toast.LENGTH_LONG).show();
         });
     }
     private void copyCode(String code) {
