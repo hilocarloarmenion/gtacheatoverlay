@@ -1,0 +1,604 @@
+{
+  "schema_version": 1,
+  "game": "Grand Theft Auto: San Andreas",
+  "edition": "Original Android port (2013), targeting GTA SA v2.10",
+  "menu_levels": [
+    "category",
+    "subcategory",
+    "cheat"
+  ],
+  "core_cheat_count": 83,
+  "notes": [
+    "Organized by player-visible effect, not by input sequence.",
+    "Codes are Android/mobile-port keyboard strings, not Definitive Edition or PC codes.",
+    "Only PJYNQCQ was confirmed working by the user on their GTA SA 2.10; others are source-documented, not device-tested.",
+    "Opening an Android overlay alone will not inject game key events. Working input must be developed/tested separately.",
+    "Use a separate save: certain crowd and mission cheats can corrupt progression."
+  ],
+  "sources": [
+    "https://gtadb.io/gta-san-andreas/cheats/mobile",
+    "https://gta.com.ua/en/articles/gta-san-andreas/cheats-mobile",
+    "https://www.gtaboom.com/gta-san-andreas-cheats-2d0b/"
+  ],
+  "categories": [
+    {
+      "name": "CJ & Abilities",
+      "subcategories": [
+        {
+          "name": "Health & Survival",
+          "cheats": [
+            {
+              "name": "Health, armor & $250,000",
+              "code": "PJYNQCQ",
+              "id": "pjynqcq",
+              "tested": "confirmed_by_user_on_original_android_2_10"
+            },
+            {
+              "name": "Infinite health",
+              "code": "BLOKKIK",
+              "id": "blokkik"
+            },
+            {
+              "name": "Complete invincibility",
+              "code": "GONPXWR",
+              "id": "gonpxwr"
+            },
+            {
+              "name": "Infinite lung capacity",
+              "code": "POOOJOX",
+              "id": "pooojox"
+            },
+            {
+              "name": "Never hungry",
+              "code": "KBTMUVH",
+              "id": "kbtmuvh"
+            },
+            {
+              "name": "Suicide",
+              "code": "SLOTSFK",
+              "id": "slotsfk"
+            }
+          ]
+        },
+        {
+          "name": "Body & Attributes",
+          "cheats": [
+            {
+              "name": "Maximum fat",
+              "code": "AESHXWQI",
+              "id": "aeshxwqi"
+            },
+            {
+              "name": "Maximum muscle",
+              "code": "SGVDSQW",
+              "id": "sgvdsqw"
+            },
+            {
+              "name": "Skinny CJ",
+              "code": "AWXDCRJ",
+              "id": "awxdcrj"
+            },
+            {
+              "name": "Maximum stamina",
+              "code": "AEZLCKXU",
+              "id": "aezlckxu"
+            },
+            {
+              "name": "Maximum respect",
+              "code": "MTGIISR",
+              "id": "mtgiisr"
+            },
+            {
+              "name": "Maximum sex appeal",
+              "code": "APGZLQR",
+              "id": "apgzlqr"
+            }
+          ]
+        },
+        {
+          "name": "Superhuman Abilities",
+          "cheats": [
+            {
+              "name": "Super punch",
+              "code": "LRMYOJM",
+              "id": "lrmyojm"
+            },
+            {
+              "name": "Super jump",
+              "code": "BFMANNZP",
+              "id": "bfmannzp"
+            },
+            {
+              "name": "Adrenaline mode",
+              "code": "SLSNRKK",
+              "id": "slsnrkk"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weapons & Gear",
+      "subcategories": [
+        {
+          "name": "Weapon Loadouts",
+          "cheats": [
+            {
+              "name": "Weapon set 1",
+              "code": "BEFWKSBQ",
+              "id": "befwksbq",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Weapon set 2",
+              "code": "SHHIHJG",
+              "id": "shhihjg",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Weapon set 3",
+              "code": "GOIZSSX",
+              "id": "goizssx"
+            },
+            {
+              "name": "Weapon set 4",
+              "code": "BIEUHQY",
+              "id": "bieuhqy"
+            }
+          ]
+        },
+        {
+          "name": "Ammo & Aiming",
+          "cheats": [
+            {
+              "name": "Infinite ammo",
+              "code": "NECUMZ",
+              "id": "necumz"
+            },
+            {
+              "name": "Full aim while driving",
+              "code": "RYSMRM",
+              "id": "rysmrm"
+            }
+          ]
+        },
+        {
+          "name": "Portable Equipment",
+          "cheats": [
+            {
+              "name": "Jetpack",
+              "code": "CDGUDEP",
+              "id": "cdgudep"
+            },
+            {
+              "name": "Parachute",
+              "code": "GSUMLEG",
+              "id": "gsumleg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vehicles & Traffic",
+      "subcategories": [
+        {
+          "name": "Spawn Vehicles",
+          "cheats": [
+            {
+              "name": "Rhino tank",
+              "code": "AYNVQVK",
+              "id": "aynvqvk"
+            },
+            {
+              "name": "Hydra jet",
+              "code": "AWPTMIIQ",
+              "id": "awptmiiq"
+            },
+            {
+              "name": "Bloodring Banger",
+              "code": "BIGLWCDD",
+              "id": "biglwcdd"
+            },
+            {
+              "name": "Hotring Racer A",
+              "code": "BGJPSYC",
+              "id": "bgjpsyc"
+            },
+            {
+              "name": "Hotring Racer B",
+              "code": "BIEAVBAY",
+              "id": "bieavbay"
+            },
+            {
+              "name": "Rancher",
+              "code": "HPGPIJZ",
+              "id": "hpgpijz"
+            },
+            {
+              "name": "Romero hearse",
+              "code": "PSPNATX",
+              "id": "pspnatx"
+            },
+            {
+              "name": "Stretch limousine",
+              "code": "IXSMWCQ",
+              "id": "ixsmwcq"
+            },
+            {
+              "name": "Trashmaster",
+              "code": "QPOLSVK",
+              "id": "qpolsvk"
+            },
+            {
+              "name": "Caddy",
+              "code": "DAHESZY",
+              "id": "daheszy"
+            }
+          ]
+        },
+        {
+          "name": "Performance & Durability",
+          "cheats": [
+            {
+              "name": "Invincible car that wrecks others",
+              "code": "BXBTUBTI",
+              "id": "bxbtubti"
+            },
+            {
+              "name": "Perfect handling",
+              "code": "DLNNHZJ",
+              "id": "dlnnhzj"
+            },
+            {
+              "name": "All cars have nitro",
+              "code": "WUSDOTO",
+              "id": "wusdoto"
+            }
+          ]
+        },
+        {
+          "name": "Vehicle Physics & Destruction",
+          "cheats": [
+            {
+              "name": "Destroy all vehicles",
+              "code": "BKFONFE",
+              "id": "bkfonfe",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Flying cars",
+              "code": "DOTBSFK",
+              "id": "dotbsfk",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Flying boats",
+              "code": "PTHSEO",
+              "id": "pthseo"
+            },
+            {
+              "name": "Cars drive on water",
+              "code": "BDBGXNJI",
+              "id": "bdbgxnji"
+            },
+            {
+              "name": "Cars float away when hit",
+              "code": "JBVIJXA",
+              "id": "jbvijxa"
+            },
+            {
+              "name": "Huge bicycle bunny hops",
+              "code": "TDBKCEH",
+              "id": "tdbkceh"
+            }
+          ]
+        },
+        {
+          "name": "Road Traffic",
+          "cheats": [
+            {
+              "name": "Always green traffic lights",
+              "code": "ENQCFMA",
+              "id": "enqcfma"
+            },
+            {
+              "name": "Aggressive drivers",
+              "code": "IOKXTFJ",
+              "id": "iokxtfj"
+            },
+            {
+              "name": "Black traffic",
+              "code": "GOYDVAO",
+              "id": "goydvao"
+            },
+            {
+              "name": "Pink traffic",
+              "code": "GYKVYTR",
+              "id": "gykvytr"
+            },
+            {
+              "name": "Sports car traffic",
+              "code": "FRIUBIL",
+              "id": "friubil"
+            },
+            {
+              "name": "Cheap car traffic",
+              "code": "JTBCSN",
+              "id": "jtbcsn"
+            },
+            {
+              "name": "Reduced traffic",
+              "code": "DEHDRX",
+              "id": "dehdrx"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "People & Police",
+      "subcategories": [
+        {
+          "name": "Wanted Level",
+          "cheats": [
+            {
+              "name": "Never wanted",
+              "code": "BYKGOAB",
+              "id": "bykgoab",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Raise wanted level",
+              "code": "NCBXXDX",
+              "id": "ncbxxdx",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Remove wanted level",
+              "code": "KDTZNHO",
+              "id": "kdtznho"
+            },
+            {
+              "name": "Six-star wanted level",
+              "code": "GWJZWC",
+              "id": "gwjzwc",
+              "warning": "Can disrupt or fail certain missions"
+            }
+          ]
+        },
+        {
+          "name": "Pedestrian Behavior",
+          "cheats": [
+            {
+              "name": "Pedestrians riot",
+              "code": "NJXPCYE",
+              "id": "njxpcye",
+              "warning": "May permanently affect a saved game; do not save on main slot"
+            },
+            {
+              "name": "Chaos mode",
+              "code": "AKOZBCH",
+              "id": "akozbch",
+              "warning": "May permanently affect a saved game; do not save on main slot"
+            },
+            {
+              "name": "Pedestrians attack CJ",
+              "code": "FARYJHZ",
+              "id": "faryjhz",
+              "warning": "May permanently affect a saved game; do not save on main slot"
+            },
+            {
+              "name": "Pedestrians attack with guns",
+              "code": "ERFBFNI",
+              "id": "erfbfni",
+              "warning": "May permanently affect a saved game; do not save on main slot"
+            },
+            {
+              "name": "Pedestrians have weapons",
+              "code": "GDNXHDK",
+              "id": "gdnxhdk"
+            }
+          ]
+        },
+        {
+          "name": "Gangs & Recruitment",
+          "cheats": [
+            {
+              "name": "Gang members everywhere",
+              "code": "EAMLJNN",
+              "id": "eamljnn"
+            },
+            {
+              "name": "Gangs control the streets",
+              "code": "HAPOHXR",
+              "id": "hapohxr"
+            },
+            {
+              "name": "Recruit anyone (pistols)",
+              "code": "JEZRPI",
+              "id": "jezrpi"
+            },
+            {
+              "name": "Recruit anyone (AK-47)",
+              "code": "AWIOMPH",
+              "id": "awiomph"
+            },
+            {
+              "name": "Recruit anyone (rockets)",
+              "code": "QAONHOH",
+              "id": "qaonhoh"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weather & Time",
+      "subcategories": [
+        {
+          "name": "Weather",
+          "cheats": [
+            {
+              "name": "Sunny weather",
+              "code": "AAEXPPQC",
+              "id": "aaexppqc"
+            },
+            {
+              "name": "Very sunny weather",
+              "code": "HTRTTVJ",
+              "id": "htrttvj"
+            },
+            {
+              "name": "Cloudy weather",
+              "code": "VBWEMQX",
+              "id": "vbwemqx"
+            },
+            {
+              "name": "Rainy weather",
+              "code": "TAVPIER",
+              "id": "tavpier"
+            },
+            {
+              "name": "Stormy weather",
+              "code": "EAKILHM",
+              "id": "eakilhm"
+            },
+            {
+              "name": "Foggy weather",
+              "code": "EGCEBVM",
+              "id": "egcebvm"
+            },
+            {
+              "name": "Sandstorm",
+              "code": "JBWDWWO",
+              "id": "jbwdwwo"
+            }
+          ]
+        },
+        {
+          "name": "Time & Sky",
+          "cheats": [
+            {
+              "name": "Orange sky (21:00)",
+              "code": "KTGDLXY",
+              "id": "ktgdlxy"
+            },
+            {
+              "name": "Always midnight",
+              "code": "AWUJNBB",
+              "id": "awujnbb"
+            },
+            {
+              "name": "Faster clock",
+              "code": "OWAKIJ",
+              "id": "owakij"
+            },
+            {
+              "name": "Advance clock 4 hours",
+              "code": "YACKMWS",
+              "id": "yackmws"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "World & Gameplay",
+      "subcategories": [
+        {
+          "name": "World Themes",
+          "cheats": [
+            {
+              "name": "Beach party theme",
+              "code": "BWCMMTD",
+              "id": "bwcmmtd",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Funhouse theme",
+              "code": "HDLIWGB",
+              "id": "hdliwgb",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Kinky theme",
+              "code": "BNIZWSB",
+              "id": "bnizwsb",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Country theme",
+              "code": "OAXCCRI",
+              "id": "oaxccri",
+              "warning": "Can disrupt or fail certain missions"
+            },
+            {
+              "name": "Ninja theme",
+              "code": "AAUSQP",
+              "id": "aausqp"
+            },
+            {
+              "name": "Elvis is everywhere",
+              "code": "LNHVOAE",
+              "id": "lnhvoae"
+            }
+          ]
+        },
+        {
+          "name": "Game Speed",
+          "cheats": [
+            {
+              "name": "Faster gameplay",
+              "code": "EHWBWDS",
+              "id": "ehwbwds"
+            },
+            {
+              "name": "Slow motion",
+              "code": "FNJFCZC",
+              "id": "fnjfczc"
+            }
+          ]
+        },
+        {
+          "name": "Mission Tools",
+          "cheats": [
+            {
+              "name": "Complete current mission",
+              "code": "BYIXZIY",
+              "id": "byixziy"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "experimental_developer_cheats": {
+    "enabled_by_default": false,
+    "reason": "Documented in additional sources but not included in core 83-code catalog; must be validated against GTA SA 2.10 before exposing in the normal UI.",
+    "category": "Developer & Debugging",
+    "subcategory": "Diagnostics",
+    "cheats": [
+      {
+        "name": "Show mobile control mappings",
+        "code": "KRRIHBT",
+        "status": "supplementary_unverified"
+      },
+      {
+        "name": "Show tap-to-target controls",
+        "code": "MIZYXHZ",
+        "status": "supplementary_unverified"
+      },
+      {
+        "name": "Show target debug information",
+        "code": "JQFUDUB",
+        "status": "supplementary_unverified"
+      },
+      {
+        "name": "Modify achievement-related stats (developer)",
+        "code": "XBOX_HELPER",
+        "status": "supplementary_unverified"
+      }
+    ]
+  }
+}
