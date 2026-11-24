@@ -1,6 +1,6 @@
 //! Shared Rust source for the original Android GTA SA v2.10 cheat catalog.
-//! Input injection is deliberately NOT implemented: Android overlays cannot
-//! safely guarantee keyboard key events in another process without a tested bridge.
+//! A bundled Android InputMethodService dispatches keyboard events via an
+//! authorized InputConnection; there is no privileged/root input injection.
 use jni::objects::{JClass, JString};
 use jni::sys::{jboolean, jstring};
 use jni::JNIEnv;
