@@ -51,6 +51,6 @@ jobs:
         run: gradle :app:assembleDebug --no-daemon --stacktrace
       - uses: actions/upload-artifact@v4
         with:
-          name: GTA-Cheat-Overlay-v0.1.0-installable-debug
+          name: GTA-Cheat-Overlay-v0.2.0-shizuku-injection-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
