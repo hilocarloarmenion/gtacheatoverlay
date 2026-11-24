@@ -31,10 +31,13 @@ public class OverlayService extends Service {
     private WindowManager.LayoutParams bubbleParams;
     private JSONArray categories;
     private int tier=1, selectedCategory=-1, selectedSubcategory=-1;
+    private String pendingWarnCode;
+    private long pendingWarnAt;
     private int dp(int px) {return (int)(px*getResources().getDisplayMetrics().density+.5f);}
     @Override public IBinder onBind(Intent intent) {return null;}
     @Override public void onCreate() {
         super.onCreate();
+        ShizukuBridge.initialize(this);
         NotificationManager nm=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         nm.createNotificationChannel(new NotificationChannel("overlay", "GTA Overlay", NotificationManager.IMPORTANCE_LOW));
         Notification notification=new Notification.Builder(this,"overlay")
@@ -171,11 +174,13 @@ public class OverlayService extends Service {
                     String name=c.getString("name"),code=c.getString("code");
                     String warning=c.optString("warning","");
                     addRow(rows,name+"\n"+code+(warning.isEmpty()?"":"\n⚠ "+warning),
-                        "⧉",()->copyCode(code),true);
+                        "⚡",()->injectCheat(code,warning),true)
+                        .setOnLongClickListener(v->{copyCode(code);return true;});
                 }
             }
         }catch(Exception e) {rows.addView(text("Error reading categories",14,WHITE,false));}
-        TextView footer=text(tier==3?"Tap to copy a mobile code • not automatic injection":"GTA SA original Android v2.10",11,MUTED,false);
+        TextView footer=text(tier==3?"Tap = send keys • Hold = copy • "+ShizukuBridge.status(this)
+            :"GTA SA original Android v2.10",11,MUTED,false);
         footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(8),0,0);
         root.addView(footer);
         WindowManager.LayoutParams p=params(width,height,Gravity.RIGHT|Gravity.CENTER_VERTICAL,
@@ -190,7 +195,7 @@ public class OverlayService extends Service {
         if(bold)view.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
         return view;
     }
-    private void addRow(LinearLayout list,String title,String trailing,Runnable action,boolean cheat) {
+    private LinearLayout addRow(LinearLayout list,String title,String trailing,Runnable action,boolean cheat) {
         LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
         row.setPadding(dp(12),dp(9),dp(12),dp(9));
         row.setBackground(rounded(0xFF343042,12,0xFF534560));
@@ -203,6 +208,28 @@ public class OverlayService extends Service {
         LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(-1,-2);
         params.bottomMargin=dp(7);list.addView(row,params);
         row.setOnClickListener(v->action.run());
+        return row;
+    }
+    private void injectCheat(String code,String warning) {
+        if(!warning.isEmpty()) {
+            long now=android.os.SystemClock.uptimeMillis();
+            if(!code.equals(pendingWarnCode) || now-pendingWarnAt>6000) {
+                pendingWarnCode=code;pendingWarnAt=now;
+                Toast.makeText(this,"⚠ "+warning+" — tap again within 6 seconds to send",Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        pendingWarnCode=null;
+        if(!ShizukuBridge.status(this).equals("Automatic input ready")) {
+            Toast.makeText(this,"Shizuku not ready. Open GTA Cheat Overlay to authorize it. Hold a cheat to copy.",Toast.LENGTH_LONG).show();
+            return;
+        }
+        hidePanel();
+        ShizukuBridge.send(this,code,message-> {
+            if(message.startsWith("SENT:"))
+                Toast.makeText(this,"Keys sent to game: "+code,Toast.LENGTH_SHORT).show();
+            else Toast.makeText(this,message,Toast.LENGTH_LONG).show();
+        });
     }
     private void copyCode(String code) {
         ClipboardManager clipboard=(ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
