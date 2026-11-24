@@ -35,9 +35,8 @@ jobs:
       - name: Test Rust catalog core
         run: cargo test --manifest-path rust/Cargo.toml
       - name: Compile Rust for Android
-        env:
-          ANDROID_NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.2.12479018
         run: |
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/27.2.12479018"
           cargo ndk -t arm64-v8a -t armeabi-v7a -o app/src/main/jniLibs build --manifest-path rust/Cargo.toml --release
           test -s app/src/main/jniLibs/arm64-v8a/libgtacheatcore.so
       - name: Install Gradle
