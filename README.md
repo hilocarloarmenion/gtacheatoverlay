@@ -22,7 +22,7 @@ Source and GitHub Actions build workflow: [.github/workflows/android-apk.yml](.g
 
 The Actions workflow builds Rust using Android NDK, builds the Android app using Gradle, and uploads **GTA-Cheat-Overlay-v0.1.0-installable-debug** as a workflow artifact containing `app-debug.apk` (signed by Android's standard debug key, so installable on Android).
 
-**The GitHub workflow has been configured but its successful completion has not been independently confirmed.** Open the repo's [Actions tab](../../actions), select the most recent green **Build Android APK** run, and download the build artifact. If no successful run exists, the APK is not yet available.
+**Verified successful CI build:** [Build Android APK run #45327264703](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45327264703) completed successfully with Rust tests, arm64/armv7 native compilation, Gradle debug APK assembly, and artifact upload all green. Download artifact **GTA-Cheat-Overlay-v0.1.0-installable-debug** from the run. It contains `app-debug.apk`. The APK has not yet been tested on a physical device.
 
 ## Controls
 
