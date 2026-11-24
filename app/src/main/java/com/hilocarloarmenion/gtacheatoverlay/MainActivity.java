@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        ShizukuBridge.initialize(this);
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
         root.setGravity(Gravity.CENTER_VERTICAL);
@@ -36,7 +37,8 @@ public class MainActivity extends Activity {
                 Uri.parse("package:" + getPackageName()));
             startActivity(i);
         });
-        button(root, "2. Show floating circle", () -> {
+        button(root, "2. Authorize Shizuku for auto input", () -> ShizukuBridge.requestPermission(this));
+        button(root, "3. Show floating circle", () -> {
             if (!Settings.canDrawOverlays(this)) {
                 Toast.makeText(this, "Enable overlay permission first", Toast.LENGTH_LONG).show();
                 return;
@@ -55,7 +57,8 @@ public class MainActivity extends Activity {
             }
         });
         button(root, "Stop overlay", () -> stopService(new Intent(this, OverlayService.class)));
-        label(root, "This prototype displays and copies MOBILE cheat codes. It does not yet inject input into GTA. Use the virtual keyboard you already tested to enter copied codes.", 13, false, 0xFFFFC879);
+        label(root, "For one-tap codes: install and start Shizuku (Wireless debugging on Android 11+), then authorize this app. Tap a cheat to send keyboard events; hold it to copy. Key events being sent does not guarantee GTA accepted the code.", 13, false, 0xFFFFC879);
+        button(root, "Shizuku setup guide", () -> startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("https://shizuku.rikka.app/guide/setup/"))));
         setContentView(root);
     }
     private TextView label(LinearLayout root, String text, int sp, boolean bold, int color) {
@@ -75,6 +78,7 @@ public class MainActivity extends Activity {
     @Override protected void onResume() {
         super.onResume();
         if(status!=null) status.setText("Overlay permission: "
-            + (Settings.canDrawOverlays(this)?"Granted ✓":"Not granted"));
+            + (Settings.canDrawOverlays(this)?"Granted ✓":"Not granted")
+            + "\nInput backend: " + ShizukuBridge.status(this));
     }
 }
