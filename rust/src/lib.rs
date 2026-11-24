@@ -21,7 +21,7 @@ pub extern "system" fn Java_com_hilocarloarmenion_gtacheatoverlay_NativeCatalog_
     }
 }
 
-/// Rejects unknown strings before the privileged Shizuku bridge handles them.
+/// Rejects unknown strings before the self-contained keyboard handles them.
 #[no_mangle]
 pub extern "system" fn Java_com_hilocarloarmenion_gtacheatoverlay_NativeCatalog_isKnownCheatNative(
     mut env: JNIEnv,
@@ -35,7 +35,7 @@ pub extern "system" fn Java_com_hilocarloarmenion_gtacheatoverlay_NativeCatalog_
     if !(7..=12).contains(&input.len()) || !input.bytes().all(|b| b.is_ascii_uppercase()) {
         return 0;
     }
-    let needle = format!("\\\"code\\\": \\\"{}\\\"", input);
+    let needle = format!("\"code\": \"{}\"", input);
     CATALOG.contains(&needle) as jboolean
 }
 
