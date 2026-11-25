@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
             }
         });
         button(root, "Stop overlay", () -> stopService(new Intent(this, OverlayService.class)));
-        label(root, "This APK includes its OWN keyboard. Enable and select 'GTA Cheat Keyboard' in Android settings, then open GTA SA and use the floating menu. Tier 3 taps attempt to send keyboard presses; hold to copy. GTA must accept keyboard input for activation.", 13, false, 0xFFFFC879);
+        label(root, "Multitouch overlay: keep one finger on GTA's movement controls and tap the bubble with another. Drag the bubble to the red × at the bottom to close it. GTA must support split touch for simultaneous gestures. Enable this APK's keyboard for experimental cheat input.", 13, false, 0xFFFFC879);
         setContentView(root);
     }
     private TextView label(LinearLayout root, String text, int sp, boolean bold, int color) {

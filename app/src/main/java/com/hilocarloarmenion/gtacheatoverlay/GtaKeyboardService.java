@@ -147,6 +147,43 @@ public final class GtaKeyboardService extends InputMethodService {
         }, 35);
     }
 
+    // Don't replace landscape GTA with an Android fullscreen text editor.
+    @Override public boolean onEvaluateFullscreenMode() {
+        return false;
+    }
+
+    private void sendManualKey(int keyCode) {
+        InputConnection conn = getCurrentInputConnection();
+        if (conn == null) return;
+        long t = android.os.SystemClock.uptimeMillis();
+        int flags = KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE;
+        conn.sendKeyEvent(new KeyEvent(t, t, KeyEvent.ACTION_DOWN,
+                keyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD,
+                0, flags, InputDevice.SOURCE_KEYBOARD));
+        conn.sendKeyEvent(new KeyEvent(t, android.os.SystemClock.uptimeMillis(),
+                KeyEvent.ACTION_UP, keyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD,
+                0, flags, InputDevice.SOURCE_KEYBOARD));
+    }
+
+    private void addActionKey(LinearLayout row, String title, int keycode) {
+        TextView key = new TextView(this);
+        key.setText(title);
+        key.setTextSize(14);
+        key.setTextColor(Color.WHITE);
+        key.setGravity(Gravity.CENTER);
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(0xFF725397);
+        background.setCornerRadius(dp(7));
+        key.setBackground(background);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(38), 1);
+        lp.setMargins(dp(2), dp(2), dp(2), dp(2));
+        row.addView(key, lp);
+        key.setOnClickListener(v -> {
+            if (keycode < 0) requestHideSelf(0);
+            else sendManualKey(keycode);
+        });
+    }
+
     @Override public View onCreateInputView() {
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -176,21 +213,17 @@ public final class GtaKeyboardService extends InputMethodService {
                 LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(0,dp(41),1);
                 p.setMargins(dp(2),dp(2),dp(2),dp(2));
                 row.addView(key,p);
-                key.setOnClickListener(v -> {
-                    InputConnection conn = getCurrentInputConnection();
-                    if (conn != null) {
-                        int keyCode=KeyEvent.KEYCODE_A+(c-'A');
-                        long time=android.os.SystemClock.uptimeMillis();
-                        int flags=KeyEvent.FLAG_SOFT_KEYBOARD | KeyEvent.FLAG_KEEP_TOUCH_MODE;
-                        conn.sendKeyEvent(new KeyEvent(time,time,KeyEvent.ACTION_DOWN,
-                            keyCode,0,0,KeyCharacterMap.VIRTUAL_KEYBOARD,0,flags,InputDevice.SOURCE_KEYBOARD));
-                        conn.sendKeyEvent(new KeyEvent(time,time,KeyEvent.ACTION_UP,
-                            keyCode,0,0,KeyCharacterMap.VIRTUAL_KEYBOARD,0,flags,InputDevice.SOURCE_KEYBOARD));
-                    }
-                });
+                key.setOnClickListener(v -> sendManualKey(KeyEvent.KEYCODE_A + (c - 'A')));
             }
             root.addView(row);
         }
+        LinearLayout actionRow = new LinearLayout(this);
+        actionRow.setGravity(Gravity.CENTER);
+        addActionKey(actionRow, "SPACE", KeyEvent.KEYCODE_SPACE);
+        addActionKey(actionRow, "DEL", KeyEvent.KEYCODE_DEL);
+        addActionKey(actionRow, "ENTER", KeyEvent.KEYCODE_ENTER);
+        addActionKey(actionRow, "HIDE", -1);
+        root.addView(actionRow);
         return root;
     }
 }

@@ -67,41 +67,176 @@ public class OverlayService extends Service {
         p.gravity=gravity;
         return p;
     }
-    private void createBubble() {
-        TextView v=new TextView(this);
-        v.setText("🎮");v.setTextSize(24);v.setGravity(Gravity.CENTER);
-        v.setBackground(rounded(0xED53338C,50,PURPLE));
-        v.setElevation(dp(8));
-        bubble=v;
-        bubbleParams=params(dp(54),dp(54),Gravity.TOP|Gravity.LEFT,
+    // Split touch lets a second finger tap the bubble while the first finger
+    // stays on GTA's joystick, provided the game's own window supports it.
+    private static final int INTERACTIVE_FLAGS =
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-            |WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        android.util.DisplayMetrics dm=getResources().getDisplayMetrics();
-        bubbleParams.x=dm.widthPixels-dp(70);bubbleParams.y=dm.heightPixels/2;
+            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+            | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+    private View dropTarget;
+    private WindowManager.LayoutParams dropParams;
+
+    private int screenWidth() {
+        return getResources().getDisplayMetrics().widthPixels;
+    }
+
+    private int screenHeight() {
+        return getResources().getDisplayMetrics().heightPixels;
+    }
+
+    private void createBubble() {
+        TextView v = new TextView(this);
+        v.setText("🎮");
+        v.setTextSize(24);
+        v.setGravity(Gravity.CENTER);
+        v.setBackground(rounded(0xED53338C, 50, PURPLE));
+        v.setElevation(dp(8));
+        bubble = v;
+
+        bubbleParams = params(dp(54), dp(54), Gravity.TOP | Gravity.LEFT, INTERACTIVE_FLAGS);
+        // The bubble's window is only 54dp wide, not an invisible full-screen
+        // overlay. Touches outside it continue to reach GTA.
+        bubbleParams.x = Math.max(0, screenWidth() - dp(68));
+        bubbleParams.y = Math.max(dp(12), (screenHeight() - dp(54)) / 2);
+
         v.setOnTouchListener(new View.OnTouchListener() {
-            float downX,downY; int startX,startY; boolean dragged;
-            @Override public boolean onTouch(View view,MotionEvent event) {
-                switch(event.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downX=event.getRawX();downY=event.getRawY();
-                        startX=bubbleParams.x;startY=bubbleParams.y;dragged=false;return true;
-                    case MotionEvent.ACTION_MOVE:
-                        int dx=(int)(event.getRawX()-downX),dy=(int)(event.getRawY()-downY);
-                        if(Math.abs(dx)+Math.abs(dy)>dp(9))dragged=true;
-                        if(dragged) {
-                            bubbleParams.x=Math.max(0,Math.min(dm.widthPixels-dp(54),startX+dx));
-                            bubbleParams.y=Math.max(0,Math.min(dm.heightPixels-dp(54),startY+dy));
-                            wm.updateViewLayout(bubble,bubbleParams);
-                        } return true;
-                    case MotionEvent.ACTION_UP:
-                        if(!dragged)togglePanel();
-                        return true;
-                }return false;
+            float downX, downY;
+            int startX, startY;
+            int pointerId = -1;
+            boolean dragged;
+
+            private float pointerRawX(MotionEvent e, int index) {
+                return e.getRawX() + e.getX(index) - e.getX(0);
+            }
+
+            private float pointerRawY(MotionEvent e, int index) {
+                return e.getRawY() + e.getY(index) - e.getY(0);
+            }
+
+            @Override public boolean onTouch(View view, MotionEvent event) {
+                int action = event.getActionMasked();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    pointerId = event.getPointerId(0);
+                    downX = event.getRawX();
+                    downY = event.getRawY();
+                    startX = bubbleParams.x;
+                    startY = bubbleParams.y;
+                    dragged = false;
+                    return true;
+                }
+                int index = pointerId < 0 ? -1 : event.findPointerIndex(pointerId);
+                if (action == MotionEvent.ACTION_CANCEL) {
+                    hideDropTarget();
+                    pointerId = -1;
+                    return true;
+                }
+                // ACTION_POINTER_UP can happen if more than one finger lands
+                // inside the bubble. Only the pointer that started the drag
+                // is permitted to move or close it.
+                if (action == MotionEvent.ACTION_POINTER_UP
+                        && event.getPointerId(event.getActionIndex()) != pointerId) {
+                    return true;
+                }
+                if (index < 0) return true;
+
+                if (action == MotionEvent.ACTION_MOVE) {
+                    int dx = Math.round(pointerRawX(event, index) - downX);
+                    int dy = Math.round(pointerRawY(event, index) - downY);
+                    if (!dragged && Math.abs(dx) + Math.abs(dy) > dp(11)) {
+                        dragged = true;
+                        hidePanel();
+                        showDropTarget();
+                    }
+                    if (dragged) {
+                        bubbleParams.x = Math.max(0,
+                                Math.min(screenWidth() - dp(54), startX + dx));
+                        bubbleParams.y = Math.max(0,
+                                Math.min(screenHeight() - dp(54), startY + dy));
+                        wm.updateViewLayout(bubble, bubbleParams);
+                        updateDropTargetHover(isOverDropTarget());
+                    }
+                    return true;
+                }
+
+                if (action == MotionEvent.ACTION_UP
+                        || (action == MotionEvent.ACTION_POINTER_UP
+                        && event.getPointerId(event.getActionIndex()) == pointerId)) {
+                    pointerId = -1;
+                    if (!dragged) {
+                        togglePanel();
+                    } else {
+                        boolean close = isOverDropTarget();
+                        hideDropTarget();
+                        if (close) {
+                            stopSelf(); // Only close our bubble/service, not GTA.
+                        } else {
+                            // Snap to the edge so the bubble doesn't sit on a
+                            // gameplay control after being moved.
+                            bubbleParams.x = bubbleParams.x + dp(27) < screenWidth() / 2
+                                    ? dp(8)
+                                    : Math.max(0, screenWidth() - dp(62));
+                            wm.updateViewLayout(bubble, bubbleParams);
+                            getSharedPreferences("overlay", MODE_PRIVATE).edit()
+                                    .putFloat("bubble_y", (float) bubbleParams.y
+                                            / Math.max(1, screenHeight() - dp(54)))
+                                    .apply();
+                        }
+                    }
+                    return true;
+                }
+                return true;
             }
         });
-        wm.addView(bubble,bubbleParams);
+        float savedY = getSharedPreferences("overlay", MODE_PRIVATE).getFloat("bubble_y", -1);
+        if (savedY >= 0) {
+            bubbleParams.y = Math.max(0, Math.min(screenHeight() - dp(54),
+                    Math.round(savedY * (screenHeight() - dp(54)))));
+        }
+        wm.addView(bubble, bubbleParams);
     }
+
+    private void showDropTarget() {
+        if (dropTarget != null) return;
+        TextView x = new TextView(this);
+        x.setText("×");
+        x.setTextSize(38);
+        x.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
+        x.setTextColor(WHITE);
+        x.setGravity(Gravity.CENTER);
+        x.setBackground(rounded(0xE66D374A, 90, 0xFFBA7180));
+        dropTarget = x;
+        // Visual indicator only; it must never steal touches from the game.
+        dropParams = params(dp(76), dp(76), Gravity.TOP | Gravity.LEFT,
+                INTERACTIVE_FLAGS | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        dropParams.alpha = 0.6f;
+        dropParams.x = Math.max(0, (screenWidth() - dp(76)) / 2);
+        dropParams.y = Math.max(0, screenHeight() - dp(96));
+        wm.addView(dropTarget, dropParams);
+    }
+
+    private boolean isOverDropTarget() {
+        if (dropTarget == null || dropParams == null) return false;
+        int dx = bubbleParams.x + dp(27) - (dropParams.x + dp(38));
+        int dy = bubbleParams.y + dp(27) - (dropParams.y + dp(38));
+        return dx * dx + dy * dy <= dp(55) * dp(55);
+    }
+
+    private void updateDropTargetHover(boolean hovering) {
+        if (dropTarget != null) {
+            dropTarget.setBackground(rounded(hovering ? 0xFFE44862 : 0xE66D374A,
+                    90, hovering ? 0xFFFFFFFF : 0xFFBA7180));
+        }
+    }
+
+    private void hideDropTarget() {
+        if (dropTarget != null) {
+            wm.removeView(dropTarget);
+            dropTarget = null;
+            dropParams = null;
+        }
+    }
+
     private void togglePanel() {
         if(panel!=null){hidePanel();return;}
         tier=1;selectedCategory=-1;selectedSubcategory=-1;showPanel();
@@ -183,10 +318,8 @@ public class OverlayService extends Service {
             :"GTA SA original Android v2.10",11,MUTED,false);
         footer.setGravity(Gravity.CENTER);footer.setPadding(0,dp(8),0,0);
         root.addView(footer);
-        WindowManager.LayoutParams p=params(width,height,Gravity.RIGHT|Gravity.CENTER_VERTICAL,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            |WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-            |WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        WindowManager.LayoutParams p=params(width,height,
+                Gravity.RIGHT | Gravity.CENTER_VERTICAL, INTERACTIVE_FLAGS);
         p.x=dp(8);panel=root;wm.addView(panel,p);
     }
     private TextView text(String text,int sp,int color,boolean bold) {
@@ -230,9 +363,26 @@ public class OverlayService extends Service {
         Toast.makeText(this,code+" copied — enter with your GTA keyboard",Toast.LENGTH_SHORT).show();
     }
     private void back() {if(tier>1){tier--;if(tier==1)selectedCategory=-1;if(tier==2)selectedSubcategory=-1;showPanel();}}
+    @Override public void onConfigurationChanged(android.content.res.Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        if (bubble != null && bubbleParams != null) {
+            hideDropTarget();
+            bubbleParams.x = Math.max(0,
+                    Math.min(bubbleParams.x, screenWidth() - dp(54)));
+            bubbleParams.y = Math.max(0,
+                    Math.min(bubbleParams.y, screenHeight() - dp(54)));
+            wm.updateViewLayout(bubble, bubbleParams);
+            if (panel != null) showPanel();
+        }
+    }
+
     @Override public void onDestroy() {
+        hideDropTarget();
         hidePanel();
-        if(bubble!=null){wm.removeView(bubble);bubble=null;}
+        if (bubble != null) {
+            wm.removeView(bubble);
+            bubble = null;
+        }
         super.onDestroy();
     }
 }
