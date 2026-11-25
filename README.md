@@ -71,3 +71,15 @@ Unofficial fan app; not affiliated with Rockstar Games.
 - [Successful v0.2.0 APK build](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45329379207) — Android SDK, Rust tests, Android native library compilation, Gradle assembly and artifact upload all passed.
 - The APK includes its own Android input method, with arm64-v8a and armeabi-v7a Rust libraries.
 - No Shizuku dependency. GTA SA accepting automatic input still needs device testing.
+
+## v0.3.0: multitouch overlay and drag-to-dismiss
+
+[Successful v0.3.0 Android APK build](https://github.com/hilocarloarmenion/gtacheatoverlay/actions/runs/45521271240) — artifact **GTA-Cheat-Overlay-v0.3.0-multitouch-debug** contains a signed, installable `app-debug.apk`.
+
+- Add `FLAG_SPLIT_TOUCH` to the tiny draggable overlay bubble and cheat panel windows. `FLAG_NOT_FOCUSABLE` and `FLAG_NOT_TOUCH_MODAL` remain enabled to avoid stealing game focus and let game touches outside the overlay reach GTA.
+- Support interacting with the bubble while another finger holds the game joystick **when GTA's window also supports split touch**. Not yet verified on the user's physical phone.
+- Drag the floating bubble to the bottom-center red **×** to stop the floating service. That close target appears only while dragging and is non-touchable.
+- Snap the bubble to the nearest screen edge after dragging; preserve vertical position, and adjust on orientation change.
+- Built-in keyboard adds Space, Delete, Enter and Hide keys and avoids fullscreen keyboard mode in landscape.
+
+See [multitouch test checklist](docs/multitouch-overlay.md). This is a signed debug build; no external apps or root are required.
